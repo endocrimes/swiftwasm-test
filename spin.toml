@@ -13,3 +13,6 @@ route = "/..."
 # executor = { "type" = "wagi" }
 [component.build]
 command = "make"
+
+[component.config]
+some_key = "This is a key from spin config"

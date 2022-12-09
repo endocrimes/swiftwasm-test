@@ -11,11 +11,17 @@ let package = Package(
     targets: [
         .target(name: "CSpinConfig", dependencies: []),
         .target(name: "CSpinHTTP", dependencies: []),
+        .target(name: "SpinHTTP", dependencies: [
+            "CSpinHTTP"
+        ]),
+        .target(name: "SpinConfig", dependencies: [
+            "CSpinConfig"
+        ]),
         .executableTarget(
             name: "swiftwasm-test",
             dependencies: [
-                "CSpinConfig",
-                "CSpinHTTP",
+                "SpinConfig",
+                "SpinHTTP",
 //                .product(name: "ArgumentParser", package: "swift-argument-parser"),
             ]),
         .testTarget(
