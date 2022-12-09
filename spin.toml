@@ -1,0 +1,15 @@
+spin_version = "1"
+name = "swiftwasm"
+version = "0.0.1"
+description = "A simple static server for Spin."
+authors = [ "Danielle Lancashire <dani@builds.terrible.systems>" ]
+trigger = {type = "http", base = "/" }
+
+[[component]]
+source = "out.wasm"
+id = "app"
+[component.trigger]
+route = "/..."
+executor = { "type" = "wagi" }
+[component.build]
+command = "make"
