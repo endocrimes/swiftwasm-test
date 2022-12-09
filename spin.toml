@@ -10,6 +10,6 @@ source = "out.wasm"
 id = "app"
 [component.trigger]
 route = "/..."
-executor = { "type" = "wagi" }
+# executor = { "type" = "wagi" }
 [component.build]
 command = "make"
