@@ -33,14 +33,28 @@ public struct HTTPRequest {
 }
 
 public struct HTTPResponse {
-    public let StatusCode: Int
-    public let Headers: [String: String]
-    public let Body: Data?
+    public var StatusCode: Int
+    public var Headers: [String: String]
+    public var Body: Data?
     
-    public init(StatusCode: Int, Headers: [String : String], Body: Data?) {
-        self.StatusCode = StatusCode
-        self.Headers = Headers
-        self.Body = Body
+    public init(statusCode: Int, headers: [String : String] = [:], body: Data?) {
+        self.StatusCode = statusCode
+        self.Headers = headers
+        self.Body = body
+    }
+    
+    public init(statusCode: Int, headers: [String : String] = [:], body: String?) {
+        self.StatusCode = statusCode
+        self.Headers = headers
+        self.Body = body?.data(using: .utf8)
+    }
+    
+    public init(statusCode: Int, headers: [String : String] = [:], JSON: Codable) throws {
+        self.StatusCode = statusCode
+        self.Headers = headers
+        self.Headers["content-type"] = "application/json"
+        let jsonEncoder = JSONEncoder()
+        self.Body = try jsonEncoder.encode(JSON)
     }
 }
 
@@ -93,7 +107,18 @@ func toSpinHeaders(headers: [String: String]) -> spin_http_option_headers_t {
     )
 }
 
-public func handleSpinHTTPRequest(_ reqPtr: SpinRawRequest, _ resPtr: SpinRawResponse, handler: HandlerFunc)  {
+public var spinHandler: HandlerFunc = { req in
+    return HTTPResponse(
+        statusCode: 200,
+        headers: [
+            "content-type": "text/html; charset=utf-8",
+        ],
+        body: "<html><h1>Hello</h1><br />Welcome to Spin!<br />The source code is available <a href=\"https://github.com/endocrimes/swiftwasm-test\">here</a></html>\n"
+    )
+}
+
+@_cdecl("spin_http_handle_http_request")
+public func handleSpinHTTPRequest(_ reqPtr: SpinRawRequest, _ resPtr: SpinRawResponse)  {
     defer {
         spin_http_request_free(reqPtr)
     }
@@ -119,7 +144,7 @@ public func handleSpinHTTPRequest(_ reqPtr: SpinRawRequest, _ resPtr: SpinRawRes
         Body: body
     )
     
-    let rs = handler(rr)
+    let rs = spinHandler(rr)
 
     resPtr.pointee.status = UInt16(rs.StatusCode)
     let responseHeaders = toSpinHeaders(headers: rs.Headers)
