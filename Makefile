@@ -1,6 +1,9 @@
 TARGET=release
 
-.build/$(TARGET)/swiftwasm-test.wasm: $(shell find Sources -type f)
+format: $(shell find . -name '*.swift' -type f)
+	swift-format format --parallel -i --recursive .
+
+.build/$(TARGET)/swiftwasm-test.wasm: format $(shell find Sources -type f)
 	xcrun --toolchain swiftwasm swift build --triple wasm32-unknown-wasi \
 		-c $(TARGET) \
 		-Xlinker "--export=main"
