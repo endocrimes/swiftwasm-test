@@ -4,28 +4,32 @@
 import PackageDescription
 
 let package = Package(
-    name: "swiftwasm-test",
-    dependencies: [
-//        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
-    ],
-    targets: [
-        .target(name: "CSpinConfig", dependencies: []),
-        .target(name: "CSpinHTTP", dependencies: []),
-        .target(name: "SpinHTTP", dependencies: [
-            "CSpinHTTP"
-        ]),
-        .target(name: "SpinConfig", dependencies: [
-            "CSpinConfig"
-        ]),
-        .executableTarget(
-            name: "swiftwasm-test",
-            dependencies: [
-                "SpinConfig",
-                "SpinHTTP",
-//                .product(name: "ArgumentParser", package: "swift-argument-parser"),
-            ]),
-        .testTarget(
-            name: "swiftwasm-testTests",
-            dependencies: ["swiftwasm-test"]),
-    ]
+  name: "swiftwasm-test",
+  dependencies: [
+    //        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
+  ],
+  targets: [
+    .target(name: "CSpinConfig", dependencies: []),
+    .target(name: "CSpinHTTP", dependencies: []),
+    .target(
+      name: "SpinHTTP",
+      dependencies: [
+        "CSpinHTTP"
+      ]),
+    .target(
+      name: "SpinConfig",
+      dependencies: [
+        "CSpinConfig"
+      ]),
+    .executableTarget(
+      name: "swiftwasm-test",
+      dependencies: [
+        "SpinConfig",
+        "SpinHTTP",
+        //                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+      ]),
+    .testTarget(
+      name: "swiftwasm-testTests",
+      dependencies: ["swiftwasm-test"]),
+  ]
 )
