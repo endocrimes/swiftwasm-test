@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <wasi-outbound-http.h>
 
-__attribute__((weak, export_name("canonical_abi_realloc")))
+WASM_EXPORT_WEAK("canonical_abi_realloc")
 void *canonical_abi_realloc(
 void *ptr,
 size_t orig_size,
@@ -14,14 +14,15 @@ size_t new_size
   return ret;
 }
 
-__attribute__((weak, export_name("canonical_abi_free")))
+WASM_EXPORT_WEAK("canonical_abi_free")
 void canonical_abi_free(
 void *ptr,
 size_t size,
 size_t align
 ) {
-//  free(ptr);
+  free(ptr);
 }
+
 #include <string.h>
 
 void wasi_outbound_http_string_set(wasi_outbound_http_string_t *ret, const char *s) {
@@ -92,8 +93,9 @@ typedef struct {
 
 __attribute__((aligned(4)))
 static uint8_t RET_AREA[32];
-__attribute__((import_module("wasi-outbound-http"), import_name("request")))
+WASM_IMPORT("wasi-outbound-http", "request")
 void __wasm_import_wasi_outbound_http_request(int32_t, int32_t, int32_t, int32_t, int32_t, int32_t, int32_t, int32_t, int32_t, int32_t, int32_t);
+
 wasi_outbound_http_http_error_t wasi_outbound_http_request(wasi_outbound_http_request_t *req, wasi_outbound_http_response_t *ret0) {
   int32_t option;
   int32_t option1;

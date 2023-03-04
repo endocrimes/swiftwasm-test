@@ -5,31 +5,37 @@ import PackageDescription
 
 let package = Package(
   name: "swiftwasm-test",
+  platforms: [
+    .macOS(.v11),
+    .iOS(.v13),
+    .tvOS(.v13),
+    .watchOS(.v8),
+    .driverKit(.v21),
+    .macCatalyst(.v13),
+  ],
+  products: [
+    .library(name: "Spin", targets: ["Spin"])
+  ],
   dependencies: [
-    //        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
+    .package(url: "https://github.com/vapor/routing-kit.git", from: "4.6.0")
   ],
   targets: [
     .target(name: "CSpinConfig", dependencies: []),
     .target(name: "CSpinHTTP", dependencies: []),
     .target(
-      name: "SpinHTTP",
+      name: "Spin",
       dependencies: [
-        "CSpinHTTP"
-      ]),
-    .target(
-      name: "SpinConfig",
-      dependencies: [
-        "CSpinConfig"
+        "CSpinHTTP",
+        "CSpinConfig",
+        .product(name: "RoutingKit", package: "routing-kit"),
       ]),
     .executableTarget(
       name: "swiftwasm-test",
       dependencies: [
-        "SpinConfig",
-        "SpinHTTP",
-        //                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+        "Spin"
       ]),
     .testTarget(
-      name: "swiftwasm-testTests",
-      dependencies: ["swiftwasm-test"]),
+      name: "SpinTests",
+      dependencies: ["Spin"]),
   ]
 )
